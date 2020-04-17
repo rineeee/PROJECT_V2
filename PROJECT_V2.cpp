@@ -3,6 +3,8 @@
 #include<windows.h>
 #include <stdlib.h>
 #include <time.h>
+#include <mmsystem.h>
+#pragma comment(lib,"winmm.lib")
 
 SceneID scene1, scene3, scene4, scene5, scene6, scene7, scene8, scene2_14, scene9, scene10;
 ObjectID left1, start, left2, left3, r1left, r1right, r2left, r2right, r3left, r3right, r4left, r4right, door, driver, screw, cut, cutblack, ballon, piano, shelf, table, box, safe1, knife, safe2, key1, key2, key, medicine, cake, safe3, memo, dooropen, restart;
@@ -27,7 +29,7 @@ void sceneCallback(SceneID scene, EventID event)
 		if (event == EventID::EVENT_ENTER_SCENE)
 			playSound(bgm1);
 	}
-	if (scene == scene5) {
+	if (scene == scene10) {
 		if (event == EventID::EVENT_ENTER_SCENE)
 			stopSound(bgm1);
 	}
@@ -197,7 +199,8 @@ int main() {
 	setSceneCallback(sceneCallback);
 	defineCombination(key1, key2, key);
 
-	bgm1 = createSound("bgm1.mp3");
+	bgm1 = createSound("bgm2.mp3");
+
 	scene1 = createScene("앨리스", "앨리스1.png");
 	scene2_14 = createScene("앨리스", "앨리스1-14.png");
 	scene3 = createScene("앨리스", "토끼.png");
