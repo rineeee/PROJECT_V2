@@ -1,16 +1,13 @@
 ﻿#include<bangtal.h>
-
 #include<stdio.h>
 #include<windows.h>
-
 #include <stdlib.h>
 #include <time.h>
 
-SceneID scene1, scene3, scene4, scene5, scene6, scene7, scene8, scene2_14, scene9, scene10, scene11;
+SceneID scene1, scene3, scene4, scene5, scene6, scene7, scene8, scene2_14, scene9, scene10;
 ObjectID left1, start, left2, left3, r1left, r1right, r2left, r2right, r3left, r3right, r4left, r4right, door, driver, screw, cut, cutblack, ballon, piano, shelf, table, box, safe1, knife, safe2, key1, key2, key, medicine, cake, safe3, memo, dooropen, restart;
 bool closed1 = true, closed2 = true, closed3 = true, closed4 = true, closed5 = true;
-TimerID timer1;
-const Second animationTime = 5.f;
+SoundID bgm1;
 
 ObjectID createObject(const char* image, SceneID scene, int x, int y, bool shown)
 {
@@ -24,6 +21,18 @@ ObjectID createObject(const char* image, SceneID scene, int x, int y, bool shown
 	return object;
 }
 
+void sceneCallback(SceneID scene, EventID event)
+{
+	if (scene == scene1) {
+		if (event == EventID::EVENT_ENTER_SCENE)
+			playSound(bgm1);
+	}
+	if (scene == scene5) {
+		if (event == EventID::EVENT_ENTER_SCENE)
+			stopSound(bgm1);
+	}
+
+}
 
 void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 	defineCombination(key1, key2, key);
@@ -41,9 +50,7 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 		showMessage("어..어..!");
 	}
 	else if (object == left3) {
-		enterScene(scene5);
-		showTimer(timer1);
-		startTimer(timer1);
+		enterScene(scene5);;
 		showMessage("여기가 어디야.. 얼른 나가야겠어.");
 	}
 	else if (object == r1left) {
@@ -81,19 +88,20 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 	else if (object == door) {
 		if (closed1 == true) {
 			if (getHandObject() == key) {
-				hideObject(door);
-				showObject(dooropen);
+				setObjectImage(door, "문열림.png");
 				closed1 = false;
 			}
+			
 			else {
 				showMessage("잠겨 있어");
 			}
 		}
+		else {
+			enterScene(scene10);
+			showMessage("밖이다!");
+		}
 	}
-	else if (object == dooropen) {
-		enterScene(scene10);
-		showMessage("밖이다!");
-	}
+
 	else if (object == key1) {
 		pickObject(key1);
 	}
@@ -115,11 +123,6 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 	else if (object == safe3) {
 		showKeypad("543126", safe3);
 	}
-	else if (object == restart) {
-		enterScene(scene5);
-		setTimer(timer1, 10.f);
-		startTimer(timer1);
-	}
 	else if (object == box) {
 		if (closed5 == true) {
 			if (getHandObject() == knife) {
@@ -135,6 +138,7 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 	else if (object == memo) {
 		showImageViewer("쪽지 확대본.png");
 	}
+
 	else if (object == ballon) {
 		if (getHandObject() == knife) {
 			hideObject(ballon);
@@ -155,9 +159,7 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 
 void timerCallback(TimerID timer)
 {
-	if (timer == timer1) {
-		enterScene(scene11);
-	}
+
 }
 
 void objectCallback(ObjectID object, EventID event)
@@ -192,10 +194,10 @@ int main() {
 	setMouseCallback(mouseCallback);
 	setTimerCallback(timerCallback);
 	setObjectCallback(objectCallback);
-
+	setSceneCallback(sceneCallback);
 	defineCombination(key1, key2, key);
 
-
+	bgm1 = createSound("bgm1.mp3");
 	scene1 = createScene("앨리스", "앨리스1.png");
 	scene2_14 = createScene("앨리스", "앨리스1-14.png");
 	scene3 = createScene("앨리스", "토끼.png");
@@ -206,7 +208,7 @@ int main() {
 	scene8 = createScene("4", "배경.jpg");
 	scene9 = createScene("??", "작아진나.png");
 	scene10 = createScene("탈출", "탈출.png");
-	scene11 = createScene("gameover", "gameover.jpg");
+
 
 	key = createObject("열쇠.png", scene5, 230, 20, false);
 	start = createObject("start.png", scene1, 570, 60, true);
@@ -251,8 +253,6 @@ int main() {
 
 	table = createObject("테이블.png", scene7, 830, 45, true);
 
-	restart = createObject("restart.png", scene11, 330, 45, true);
-
 	box = createObject("상자.png", scene6, 870, 25, true);
 
 	safe1 = createObject("금고.png", scene7, 280, 55, true);
@@ -276,7 +276,7 @@ int main() {
 
 	memo = createObject("쪽지.png", scene6, 770, 25, false);
 
-	timer1 = createTimer(10.f);
+	
 
 	startGame(scene1);
 }
