@@ -6,8 +6,9 @@
 #include <mmsystem.h>
 #pragma comment(lib,"winmm.lib")
 
-SceneID scene1, scene3, scene4, scene5, scene6, scene7, scene8, scene2_14, scene9, scene10;
+SceneID scene1, scene3, scene4, scene5, scene6, scene7, scene8, scene2_14, scene9, scene10,scene11,scene12,scene13,scene14;
 ObjectID left1, start, left2, left3, r1left, r1right, r2left, r2right, r3left, r3right, r4left, r4right, door, driver, screw, cut, cutblack, ballon, piano, shelf, table, box, safe1, knife, safe2, key1, key2, key, medicine, cake, safe3, memo, dooropen, restart;
+ObjectID smartphone,back1,back2,back3,back4,icon,no,one,two,hammer,cross,bean,onoff,previous1,previous2,word,clear1,clear2,showhint1,showhint2;
 bool closed1 = true, closed2 = true, closed3 = true, closed4 = true, closed5 = true;
 SoundID bgm1;
 
@@ -43,6 +44,13 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 		enterScene(scene2_14);
 
 	}
+	else if (object == word) {
+		if (action == MouseAction::MOUSE_DRAG_DOWN) {
+			locateObject(word, scene14, 545, 605);
+			showObject(clear2);
+			showObject(showhint2);
+		}
+	}
 	else if (object == left1) {
 		enterScene(scene3);
 		showMessage("토끼가 어디 가는 거지");
@@ -55,6 +63,14 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 		enterScene(scene5);;
 		showMessage("여기가 어디야.. 얼른 나가야겠어.");
 	}
+	else if (object == screw) {
+		if (getHandObject() == driver) {
+			showObject(cutblack);
+			showObject(cut);
+			showObject(safe2);
+		}
+	}
+
 	else if (object == r1left) {
 		enterScene(scene6);
 	}
@@ -78,6 +94,43 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 	}
 	else if (object == r4right) {
 		enterScene(scene7);
+	}
+	else if (object == smartphone) {
+		enterScene(scene11);
+	}
+	
+	else if (object == icon) {
+		enterScene(scene12);
+	}
+	else if (object == one) {
+		enterScene(scene13);
+	}
+	else if (object == two) {
+		enterScene(scene14);
+	}
+	else if (object == no) {
+		enterScene(scene11);
+	}
+	else if (object == onoff) {
+		showObject(clear1);
+		showObject(showhint1);
+	}
+	else if (object == showhint1) {
+		hideObject(showhint1);
+		setObjectImage(clear1, "힌트1.png");
+	}
+	else if (object == showhint2) {
+		hideObject(showhint2);
+		setObjectImage(clear2, "힌트2.png");
+	}
+	else if (object == hammer) {
+		setObjectImage(hammer, "망치노.png");
+	}
+	else if (object == cross) {
+		setObjectImage(cross, "십자가노.png");
+	}
+	else if (object == bean) {
+		setObjectImage(bean, "팥노.png");
 	}
 	else if (object == medicine) {
 		enterScene(scene9);
@@ -147,15 +200,17 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 			showObject(driver);
 		}
 	}
+	else if (object == previous1) {
+	enterScene(scene12);
+	}
+	else if (object == previous2) {
+	enterScene(scene12);
+	}
 	else if (object == piano) {
 		showImageViewer("피아노 확대본.png");
 	}
-	else if (object == screw) {
-		if (getHandObject() == driver) {
-			showObject(cutblack);
-			showObject(cut);
-			showObject(safe2);
-		}
+	else if (object == back1 || back2 || back3 || back4) {
+	enterScene(scene8);
 	}
 }
 
@@ -211,6 +266,10 @@ int main() {
 	scene8 = createScene("4", "배경.jpg");
 	scene9 = createScene("??", "작아진나.png");
 	scene10 = createScene("탈출", "탈출.png");
+	scene11 = createScene("hint", "기본.png");
+	scene12 = createScene("hint", "앱화면.jpg");
+	scene13 = createScene("hint", "게임1.jpg");
+	scene14 = createScene("hint", "게임2.jpg");
 
 
 	key = createObject("열쇠.png", scene5, 230, 20, false);
@@ -264,7 +323,7 @@ int main() {
 
 	safe2 = createObject("함.png", scene5, 620, 55, false);
 
-	key1 = createObject("잘린열쇠1.png", scene5, 620, 25, false);
+	key1 = createObject("잘린열쇠1.png", scene5, 550, 25, false);
 	scaleObject(key1, 0.7f);
 
 	key2 = createObject("잘린열쇠2.png", scene9, 320, 195, false);
@@ -279,7 +338,35 @@ int main() {
 
 	memo = createObject("쪽지.png", scene6, 770, 25, false);
 
-	
+	//미니게임
+	smartphone = createObject("스마트폰.png", scene8, 500, 45, true);
+	back1 = createObject("돌아가기.png", scene11, 850, 55, true);
+	scaleObject(back1, 0.6f);
+	back2 = createObject("돌아가기.png", scene12, 850, 55, true);
+	scaleObject(back2, 0.6f);
+	back3 = createObject("돌아가기.png", scene13, 850, 55, true);
+	scaleObject(back3, 0.6f);
+	back4 = createObject("돌아가기.png", scene14, 850, 55, true);
+	scaleObject(back4, 0.6f);
+	icon = createObject("아이콘.png", scene11, 520, 580, true);
+	no = createObject("액스.jpg", scene12, 730, 610, true);
+	one = createObject("1.jpg", scene12, 500, 400, true);
+	two = createObject("2.jpg", scene12, 660, 400, true);
+	hammer = createObject("망치.png", scene13, 500, 100, true);
+	cross = createObject("십자가.png", scene13, 620, 100, true);
+	bean = createObject("팥.png", scene13, 685, 100, true);
+	onoff = createObject("전원.png", scene13, 763, 350, true);
+	scaleObject(onoff, 0.4f);
+	previous1 = createObject("전버튼.jpg", scene13, 500, 50, true);
+	previous2 = createObject("전버튼.jpg", scene14, 500, 50, true);
+	word = createObject("발끝.png", scene14, 547, 555, true);
+	scaleObject(word, 0.18f);
+	clear1 = createObject("게임성공.png", scene13, 505, 220, false);
+	clear2 = createObject("게임성공.png", scene14, 505, 220, false);
+	showhint1 = createObject("힌트보기.png", scene13, 585, 245, false);
+	scaleObject(showhint1, 0.5f);
+	showhint2 = createObject("힌트보기.png", scene14, 585, 245, false);
+	scaleObject(showhint2, 0.5f);
 
 	startGame(scene1);
 }
